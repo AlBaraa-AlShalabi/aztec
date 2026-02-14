@@ -8,6 +8,8 @@ use Albaraa\Aztec\Generators\ControllerGenerator;
 use Albaraa\Aztec\Generators\RequestsGenerator;
 use Albaraa\Aztec\Generators\ResourceGenerator;
 use Albaraa\Aztec\Generators\RepositoryGenerator;
+use Albaraa\Aztec\Generators\ServiceGenerator;
+use Albaraa\Aztec\Generators\RoutesGenerator;
 use Albaraa\Aztec\Generators\Generator;
 use Albaraa\Aztec\Inspectors\ClassResolver;
 use Albaraa\Aztec\Inspectors\ModelLocator;
@@ -102,6 +104,40 @@ class MakeCrudCommand extends Command
             $spec->resourceRelations = $selected;
         }
 
+        if (in_array('service', $layers)) {
+            $this->info('Configuring Service Layer...');
+            
+            // 1. Filters
+            if ($this->confirm('Do you want to add custom filters for the list method?', true)) {
+                $filters = [];
+                while (true) {
+                    $field = $this->ask('Enter filter field name (leave empty to stop)');
+                    if (empty($field)) break;
+                    
+                    $type = $this->choice(
+                        "Select type for filter '{$field}'", 
+                        ['string', 'int', 'bool', 'array'], 
+                        0
+                    );
+                    $filters[$field] = $type;
+                }
+                $spec->filters = $filters;
+            }
+
+            // 2. Sync Relations
+            if (!empty($spec->relations)) {
+                 $syncParams = $this->choice(
+                    'Select relations to sync on create/update',
+                    $spec->relations,
+                    null,
+                    null,
+                    true
+                );
+                // choice returns array if multiple is true
+                $spec->syncRelations = is_array($syncParams) ? $syncParams : [$syncParams];
+            }
+        }
+
         if (empty($layers)) {
             $this->warn('No layers to generate (check config or --only option).');
             return self::SUCCESS;
@@ -162,6 +198,8 @@ class MakeCrudCommand extends Command
             'requests'   => new RequestsGenerator($spec),
             'resource'   => new ResourceGenerator($spec),
             'repository' => new RepositoryGenerator($spec),
+            'service'    => new ServiceGenerator($spec),
+            'routes'     => new RoutesGenerator($spec),
             default      => null,
         };
     }

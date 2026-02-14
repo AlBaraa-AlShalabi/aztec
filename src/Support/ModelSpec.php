@@ -27,6 +27,8 @@ final class ModelSpec
         public ?array $translatable = null,
         public array $relations = [],
         public array $resourceRelations = [],
+        public array $filters = [],
+        public array $syncRelations = [],
     ) {
     }
 
@@ -50,6 +52,8 @@ final class ModelSpec
             'translatable' => $this->translatable,
             'relations' => $this->relations,
             'resource_relations' => $this->resourceRelations,
+            'filters' => $this->filters,
+            'sync_relations' => $this->syncRelations,
         ];
     }
 
@@ -71,11 +75,13 @@ final class ModelSpec
         ?array $translatable = null,
         array $relations = [],
         array $resourceRelations = [],
+        array $filters = [],
+        array $syncRelations = [],
     ): self {
         return new self(
             $moduleName, $modulePath, $filePath, $fqcn, $className, $table, $notes,
             $casts, $fillable, $guarded, $hidden, $appends, $with, $connection, $translatable,
-            $relations, $resourceRelations
+            $relations, $resourceRelations, $filters, $syncRelations
         );
     }
 }

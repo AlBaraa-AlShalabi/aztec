@@ -101,4 +101,13 @@ abstract class Generator
 
         return $base . ($append ? DIRECTORY_SEPARATOR . $append : '');
     }
+
+    /**
+     * Get the module root path regardless of structure.
+     */
+    protected function moduleRootPath(string $append = ''): string
+    {
+        $base = rtrim($this->spec->modulePath, DIRECTORY_SEPARATOR);
+        return $base . ($append ? DIRECTORY_SEPARATOR . $append : '');
+    }
 }

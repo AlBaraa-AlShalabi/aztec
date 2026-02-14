@@ -1,0 +1,74 @@
+<?php
+
+namespace {{ serviceNamespace }};
+
+use {{ repositoryInterfaceNamespace }}\{{ repositoryInterface }};
+use {{ modelFqcn }};
+use Illuminate\Support\Facades\DB;
+use Exception;
+
+class {{ serviceClass }}
+{
+    protected {{ repositoryInterface }} $repository;
+
+    public function __construct({{ repositoryInterface }} $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    public function list(?string $search = null, int $perPage = 15{{ filterParams }})
+    {
+        return $this->repository->query()
+            ->when($search, function ($query, $search) {
+                $like = '%' . trim($search) . '%';
+
+                $query->where(function ($q) use ($like) {
+{{ searchLogic }}
+                });
+            })
+{{ filterLogic }}
+            ->paginate($perPage);
+    }
+
+    public function listSelect(?string $search = null, int $perPage = 15{{ filterParams }})
+    {
+        return $this->repository->query()
+            ->paginate($perPage);
+    }
+
+    public function create(array $data): {{ modelName }}
+    {
+        return DB::transaction(function () use ($data) {
+            $model = $this->repository->create($data);
+{{ syncRelationsCreate }}
+            return $model;
+        });
+    }
+
+    public function show(int $id): ?{{ modelName }}
+    {
+        return $this->repository->find($id);
+    }
+
+    public function update(int $id, array $data): ?{{ modelName }}
+    {
+        return DB::transaction(function () use ($id, $data) {
+            $model = $this->repository->update($id, $data);
+{{ syncRelationsUpdate }}
+            return $model;
+        });
+    }
+
+    public function delete(int $id): bool
+    {
+        return DB::transaction(function () use ($id) {
+            $model = $this->repository->find($id);
+
+            if (!$model) {
+                throw new Exception("{{ modelName }} not found");
+            }
+
+            return $this->repository->delete($id);
+        });
+    }
+}

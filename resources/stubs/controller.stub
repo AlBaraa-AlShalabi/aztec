@@ -2,7 +2,8 @@
 
 namespace {{ controllerNamespace }};
 
-use {{ modelFqcn }};
+use App\Http\Controllers\Controller;
+use {{ serviceNamespace }}\{{ serviceClass }};
 use {{ requestsNamespace }}\{{ storeRequest }};
 use {{ requestsNamespace }}\{{ updateRequest }};
 use {{ resourcesNamespace }}\{{ resourceClass }};
@@ -11,12 +12,18 @@ use Illuminate\Http\Response;
 
 class {{ controllerClass }} extends Controller
 {
+    public function __construct(protected {{ serviceClass }} $service)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(): {{ resourceClass }}|Response
+    public function index(Request $request): {{ resourceClass }}|Response
     {
-        $items = {{ model }}::query(){{ eagerLoadIndex }}->paginate();
+        $items = $this->service->list(
+            {{ listMethodArgs }}
+        );
 
         return {{ resourceClass }}::collection($items);
     }
@@ -26,39 +33,37 @@ class {{ controllerClass }} extends Controller
      */
     public function store({{ storeRequest }} $request): {{ resourceClass }}
     {
-        ${{ modelVariable }} = {{ model }}::create($request->validated());
+        $model = $this->service->create($request->validated());
 
-        return new {{ resourceClass }}(${{ modelVariable }});
+        return new {{ resourceClass }}($model);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show({{ model }} ${{ modelVariable }}): {{ resourceClass }}
+    public function show(int $id): {{ resourceClass }}
     {
-        ${{ modelVariable }}{{ eagerLoadShow }};
+        $model = $this->service->show($id);
 
-        return new {{ resourceClass }}(${{ modelVariable }});
+        return new {{ resourceClass }}($model);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }}): {{ resourceClass }}
+    public function update({{ updateRequest }} $request, int $id): {{ resourceClass }}
     {
-        ${{ modelVariable }}->update($request->validated());
+        $model = $this->service->update($id, $request->validated());
 
-        ${{ modelVariable }} = ${{ modelVariable }}->refresh();
-
-        return new {{ resourceClass }}(${{ modelVariable }});
+        return new {{ resourceClass }}($model);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy({{ model }} ${{ modelVariable }}): Response
+    public function destroy(int $id): Response
     {
-        ${{ modelVariable }}->delete();
+        $this->service->delete($id);
 
         return response()->noContent();
     }
