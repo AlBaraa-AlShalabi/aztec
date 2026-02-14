@@ -61,7 +61,6 @@ class SourceResolver
 
         $fqcn = $nsName !== '' ? $nsName . '\\' . $className : $className;
 
-        // Look for protected $table = '...';
         $table = null;
         $notes = [];
 

@@ -41,7 +41,6 @@ class ModelLocator
             }
         }
 
-        // try case-insensitive search as a last resort
         $found = $this->caseInsensitiveSearch($modulePath, $modelName);
         if ($found !== null) {
             return $found;

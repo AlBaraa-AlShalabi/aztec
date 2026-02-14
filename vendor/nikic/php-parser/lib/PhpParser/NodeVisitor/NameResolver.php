@@ -170,9 +170,7 @@ class NameResolver extends NodeVisitorAbstract {
 
     /** @param Stmt\Use_::TYPE_* $type */
     private function addAlias(Node\UseItem $use, int $type, ?Name $prefix = null): void {
-        // Add prefix for group uses
         $name = $prefix ? Name::concat($prefix, $use->name) : $use->name;
-        // Type is determined either by individual element or whole use declaration
         $type |= $use->type;
 
         $this->nameContext->addAlias(
@@ -232,7 +230,6 @@ class NameResolver extends NodeVisitorAbstract {
         }
 
         if ($this->preserveOriginalNames) {
-            // Save the original name
             $originalName = $name;
             $name = clone $originalName;
             $name->setAttribute('originalName', $originalName);
@@ -243,8 +240,6 @@ class NameResolver extends NodeVisitorAbstract {
             return $resolvedName;
         }
 
-        // unqualified names inside a namespace cannot be resolved at compile-time
-        // add the namespaced version of the name as an attribute
         $name->setAttribute('namespacedName', FullyQualified::concat(
             $this->nameContext->getNamespace(), $name, $name->getAttributes()));
         return $name;

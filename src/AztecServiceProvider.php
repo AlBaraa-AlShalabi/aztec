@@ -9,7 +9,6 @@ class AztecServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Merge config if needed (optional, but good practice)
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/config/aztec.php',
             'aztec'
@@ -23,16 +22,15 @@ class AztecServiceProvider extends ServiceProvider
                 MakeCrudCommand::class,
             ]);
 
-            // Use dirname(__DIR__) or realpath for symlink safety
             $sourceConfig = realpath(dirname(__DIR__) . '/config/aztec.php') ?: dirname(__DIR__) . '/config/aztec.php';
             $this->publishes([
                 $sourceConfig => config_path('aztec.php'),
-            ], ['aztec-config', 'config']);  // Added 'config' tag for convenience
+            ], ['aztec-config', 'config']);
 
             $sourceStubs = realpath(dirname(__DIR__) . '/resources/stubs') ?: dirname(__DIR__) . '/resources/stubs';
             $this->publishes([
                 $sourceStubs => base_path('stubs/aztec'),
-            ], ['aztec-stubs', 'stubs']);  // Added 'stubs' tag for convenience
+            ], ['aztec-stubs', 'stubs']);
         }
     }
 }

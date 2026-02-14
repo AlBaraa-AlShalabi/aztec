@@ -93,7 +93,6 @@ class RequestsGenerator extends Generator
             $rules[] = 'integer';
             $relationName = Str::camel(substr($field, 0, -3));
 
-            // Attempt to load the class if it's not already in memory
             if (!class_exists($this->spec->fqcn) && file_exists($this->spec->filePath)) {
                 @include_once $this->spec->filePath;
             }
@@ -111,18 +110,14 @@ class RequestsGenerator extends Generator
                         return $rules;
                     }
                 } catch (\Throwable $e) {
-                    // Fallback to default integer rule if instantiation fails
                 }
             }
 
-            // Fallback: simple regex analysis if runtime inspection failed
             $fileContent = file_get_contents($this->spec->filePath);
             if (preg_match('/public\s+function\s+' . $relationName . '\s*\(\s*\)/', $fileContent, $match, PREG_OFFSET_CAPTURE)) {
                 $offset = $match[0][1];
-                // Search in the next 500 chars for belongsTo
                 $body = substr($fileContent, $offset, 500);
                 if (preg_match('/belongsTo\(\s*([a-zA-Z0-9_\\\\]+)::class/', $body, $m)) {
-                     // Best guess: snake_case plural of the class name
                     $relatedClass = class_basename($m[1]);
                     $relatedTable = Str::snake(Str::plural($relatedClass));
                     $rules[] = "exists:{$relatedTable},id";
@@ -159,7 +154,6 @@ class RequestsGenerator extends Generator
                 break;
         }
 
-        // Special common fields
         if ($field === 'email') {
             $rules[] = 'email';
         }

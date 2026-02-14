@@ -16,13 +16,11 @@ class ModuleLocator
      */
     public function locate(string $moduleName): string
     {
-        // prefer Laravel config if available
         $base = null;
         if (function_exists('config')) {
             $base = config('aztec.modules_path', base_path('Modules'));
         }
 
-        // fallback to environment: current working dir + /Modules
         if (empty($base)) {
             $base = getcwd() . DIRECTORY_SEPARATOR . 'Modules';
         }

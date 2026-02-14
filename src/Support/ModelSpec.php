@@ -27,7 +27,6 @@ final class ModelSpec
         public ?array $translatable = null,
         public array $relations = [],
         public array $resourceRelations = [],
-        // Add more as needed for future inspectors
     ) {
     }
 

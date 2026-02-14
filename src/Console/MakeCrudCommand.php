@@ -88,11 +88,6 @@ class MakeCrudCommand extends Command
             relations: $classMeta['relations'] ?? [],
         );
 
-        // Optional debug output
-        // $this->line('ModelSpec:');
-        // $this->line(json_encode($spec->toArray(), JSON_PRETTY_PRINT));
-
-        // --- GENERATION LOGIC ---
         $layers = $this->determineLayers();
 
         if (in_array('resource', $layers) && !empty($spec->relations)) {
@@ -102,7 +97,7 @@ class MakeCrudCommand extends Command
                 $spec->relations,
                 null,
                 null,
-                true // allow multiple
+                true 
             );
             $spec->resourceRelations = $selected;
         }
@@ -123,7 +118,6 @@ class MakeCrudCommand extends Command
             }
 
             try {
-                // We define a callback to handle overwrites interactively
                 $shouldOverwrite = function (string $path) {
                     if ($this->option('force')) return true;
                     if (!file_exists($path)) return true;
@@ -139,7 +133,6 @@ class MakeCrudCommand extends Command
                 $paths = is_array($paths) ? $paths : [$paths];
 
                 foreach ($paths as $path) {
-                    // Cleaner output: show path relative to module root
                     $relative = str_replace($spec->modulePath . '/', '', $path);
                     $this->info("Processed {$layer}: {$relative}");
                 }

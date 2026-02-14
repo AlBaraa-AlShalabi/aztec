@@ -57,7 +57,7 @@ abstract class Generator
 
         return [
             '{{ moduleNamespace }}'       => $moduleNamespace,
-            '{{ modelNamespace }}'        => dirname(str_replace('\\', '/', $this->spec->fqcn)), // e.g., Modules\Blog\Models
+            '{{ modelNamespace }}'        => dirname(str_replace('\\', '/', $this->spec->fqcn)),
             '{{ modelFqcn }}'             => $this->spec->fqcn,
             '{{ model }}'                 => $this->spec->className,
             '{{ modelVariable }}'         => lcfirst($this->spec->className),
@@ -76,7 +76,6 @@ abstract class Generator
         $canWrite = is_callable($force) ? $force($path) : $force;
 
         if ($this->files->exists($path) && !$canWrite) {
-            // We return the path but skip the actual filesystem write
             return $path;
         }
 
@@ -96,7 +95,6 @@ abstract class Generator
     {
         $base = rtrim($this->spec->modulePath, DIRECTORY_SEPARATOR);
         
-        // If "app" directory exists inside the module, use it as the source root
         if (is_dir($base . DIRECTORY_SEPARATOR . 'app')) {
             $base .= DIRECTORY_SEPARATOR . 'app';
         }

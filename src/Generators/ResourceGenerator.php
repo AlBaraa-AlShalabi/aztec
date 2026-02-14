@@ -18,7 +18,7 @@ class ResourceGenerator extends Generator
 
         $path = $this->modulePath('Http/Resources/' . $this->spec->className . 'Resource.php');
 
-        return $this->writeFile($path, $content, $force);  // Pass $force here
+        return $this->writeFile($path, $content, $force);
     }
 
     protected function getResourcesNamespace(): string
@@ -29,7 +29,6 @@ class ResourceGenerator extends Generator
     protected function buildToArrayMethod(): string
     {
         $relationLines = [];
-        // Prioritize user selected relations, then fallback to 'with' (eager load) property
         $relations = !empty($this->spec->resourceRelations) 
             ? $this->spec->resourceRelations 
             : ($this->spec->with ?? []);

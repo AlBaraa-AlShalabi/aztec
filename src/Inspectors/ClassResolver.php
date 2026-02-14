@@ -48,7 +48,6 @@ class ClassResolver
             $reflection = new ReflectionClass($fqcn);
             $properties = $this->extractFromReflection($reflection);
             
-            // Merge AST relations with Reflection relations
             $properties['relations'] = array_unique(array_merge(
                 $properties['relations'] ?? [], 
                 $astRelations
@@ -58,7 +57,6 @@ class ClassResolver
 
         } catch (ReflectionException $e) {
             $notes[] = 'reflection_failed_autoload';
-            // Fallback to AST
             return array_merge(
                 $this->extractFromAst($filePath),
                 ['notes' => $notes]
@@ -147,8 +145,6 @@ class ClassResolver
             }
         }
 
-        // Relations are now handled by scanRelationsFromSource in the resolve method or merged here
-        // But for completeness let's populate it here too using the local AST
         $properties['relations'] = $this->analyzeRelationsInNode($classNode);
 
         return $properties;
@@ -156,7 +152,6 @@ class ClassResolver
 
     protected function scanRelationsFromSource(string $filePath): array
     {
-        // Quick parse just for relations
         $code = file_get_contents($filePath);
         if ($code === false) return [];
 
@@ -169,7 +164,6 @@ class ClassResolver
                 return $this->analyzeRelationsInNode($classNode);
             }
         } catch (\Throwable $e) {
-            // ignore parsing errors here
         }
 
         return [];
@@ -211,8 +205,6 @@ class ClassResolver
             if ($item->value instanceof Node\Scalar\String_) {
                 $items[] = $item->value->value;
             } elseif ($item->value instanceof Node\Expr\ArrayDimFetch || $item->value instanceof Node\Expr\ConstFetch) {
-                // For now, note non-literal and skip
-                // Could extend to handle constants or simple expressions
             }
         }
         return $items;
@@ -226,7 +218,6 @@ class ClassResolver
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
-            // Check return type if available
             $returnType = $method->getReturnType();
             if ($returnType instanceof \ReflectionNamedType && !$returnType->isBuiltin()) {
                 $typeName = $returnType->getName();
