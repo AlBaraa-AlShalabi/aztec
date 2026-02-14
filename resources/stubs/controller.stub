@@ -1,0 +1,65 @@
+<?php
+
+namespace {{ controllerNamespace }};
+
+use {{ modelFqcn }};
+use {{ requestsNamespace }}\{{ storeRequest }};
+use {{ requestsNamespace }}\{{ updateRequest }};
+use {{ resourcesNamespace }}\{{ resourceClass }};
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+class {{ controllerClass }} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): {{ resourceClass }}|Response
+    {
+        $items = {{ model }}::query(){{ eagerLoadIndex }}->paginate();
+
+        return {{ resourceClass }}::collection($items);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ storeRequest }} $request): {{ resourceClass }}
+    {
+        ${{ modelVariable }} = {{ model }}::create($request->validated());
+
+        return new {{ resourceClass }}(${{ modelVariable }});
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ model }} ${{ modelVariable }}): {{ resourceClass }}
+    {
+        ${{ modelVariable }}{{ eagerLoadShow }};
+
+        return new {{ resourceClass }}(${{ modelVariable }});
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }}): {{ resourceClass }}
+    {
+        ${{ modelVariable }}->update($request->validated());
+
+        ${{ modelVariable }} = ${{ modelVariable }}->refresh();
+
+        return new {{ resourceClass }}(${{ modelVariable }});
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ model }} ${{ modelVariable }}): Response
+    {
+        ${{ modelVariable }}->delete();
+
+        return response()->noContent();
+    }
+}

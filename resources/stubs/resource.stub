@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ resourcesNamespace }};
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class {{ resourceClass }} extends JsonResource
+{
+{{ toArrayMethod }}
+}

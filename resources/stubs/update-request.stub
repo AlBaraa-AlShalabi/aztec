@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ requestsNamespace }};
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class {{ model }}UpdateRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true; // TODO: Implement proper authorization
+    }
+
+    public function rules(): array
+    {
+        return [
+{{ rules }}
+        ];
+    }
+}
