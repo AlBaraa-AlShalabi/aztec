@@ -25,6 +25,7 @@ class RequestsGenerator extends Generator
             '{{ requestsNamespace }}' => $this->getRequestsNamespace(),
             '{{ model }}'              => $this->spec->className,
             '{{ rules }}'              => $this->formatRules($rules),
+            '{{ messages }}'           => $this->formatMessages($rules),
         ]);
 
         $content = $this->replacePlaceholders($stub, $replacements);
@@ -42,6 +43,7 @@ class RequestsGenerator extends Generator
             '{{ requestsNamespace }}' => $this->getRequestsNamespace(),
             '{{ model }}'              => $this->spec->className,
             '{{ rules }}'              => $this->formatRules($rules),
+            '{{ messages }}'           => $this->formatMessages($rules),
         ]);
 
         $content = $this->replacePlaceholders($stub, $replacements);
@@ -180,6 +182,40 @@ class RequestsGenerator extends Generator
             $lines[] = "            {$field} => ['{$ruleString}'],";
         }
 
+        return implode("\n", $lines);
+    }
+
+    protected function formatMessages(array $rules): string
+    {
+        if (empty($rules)) {
+             return "";
+        }
+
+        $lines = [];
+        $moduleSlug = Str::slug($this->spec->moduleName);
+        // Maybe translate module name too if needed, but per request key logic:
+        $moduleKey = $moduleSlug; 
+
+        foreach ($rules as $field => $fieldRules) {
+            // $field comes with quotes, remove them for key generation logic
+            $fieldClean = trim($field, "'\"");
+            
+            foreach ($fieldRules as $rule) {
+                // Rule might be formatted like "min:8" or "exists:users,id"
+                $ruleParts = explode(':', $rule);
+                $ruleName = $ruleParts[0];
+                
+                // Construct the validation key
+                // Use fieldClean for the key structure
+                // But use $field (with quotes) . '.' . $ruleName for array key
+                
+                $messageKey = "'{$fieldClean}.{$ruleName}'";
+                $messageValue = "'validations.{$moduleKey}.{$fieldClean}.{$ruleName}'";
+                
+                $lines[] = "            {$messageKey} => {$messageValue},";
+            }
+        }
+        
         return implode("\n", $lines);
     }
 }

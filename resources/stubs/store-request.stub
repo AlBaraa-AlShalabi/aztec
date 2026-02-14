@@ -17,4 +17,11 @@ class {{ model }}StoreRequest extends FormRequest
 {{ rules }}
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+{{ messages }}
+        ];
+    }
 }
