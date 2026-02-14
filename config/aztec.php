@@ -19,10 +19,10 @@ return [
     'layers' => [
         'controller',
         'requests',
-        // 'service',
-        // 'repository',
+        'service',
+        'repository',
         'resource',
-        // 'routes',
+        'routes',
     ],
 
     /*
