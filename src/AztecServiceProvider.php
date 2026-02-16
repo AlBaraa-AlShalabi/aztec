@@ -4,6 +4,12 @@ namespace Albaraa\Aztec;
 
 use Illuminate\Support\ServiceProvider;
 use Albaraa\Aztec\Console\MakeCrudCommand;
+use Albaraa\Aztec\Console\MakeModuleCommand;
+use Albaraa\Aztec\Console\MakeControllerCommand;
+use Albaraa\Aztec\Console\MakeModelCommand;
+use Albaraa\Aztec\Console\MakeRequestCommand;
+use Albaraa\Aztec\Console\MakeResourceCommand;
+use Albaraa\Aztec\Support\ModuleLoader;
 
 class AztecServiceProvider extends ServiceProvider
 {
@@ -20,6 +26,11 @@ class AztecServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 MakeCrudCommand::class,
+                MakeModuleCommand::class,
+                MakeControllerCommand::class,
+                MakeModelCommand::class,
+                MakeRequestCommand::class,
+                MakeResourceCommand::class,
             ]);
 
             $sourceConfig = realpath(dirname(__DIR__) . '/config/aztec.php') ?: dirname(__DIR__) . '/config/aztec.php';
@@ -32,5 +43,7 @@ class AztecServiceProvider extends ServiceProvider
                 $sourceStubs => base_path('stubs/aztec'),
             ], ['aztec-stubs', 'stubs']);
         }
+
+        ModuleLoader::boot();
     }
 }
