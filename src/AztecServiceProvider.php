@@ -9,6 +9,14 @@ use Albaraa\Aztec\Console\MakeControllerCommand;
 use Albaraa\Aztec\Console\MakeModelCommand;
 use Albaraa\Aztec\Console\MakeRequestCommand;
 use Albaraa\Aztec\Console\MakeResourceCommand;
+use Albaraa\Aztec\Console\MakeMigrationCommand;
+use Albaraa\Aztec\Console\MakeSeederCommand;
+use Albaraa\Aztec\Console\MigrateModuleCommand;
+use Albaraa\Aztec\Console\SeedModuleCommand;
+use Albaraa\Aztec\Console\MigrateRollbackCommand;
+use Albaraa\Aztec\Console\MigrateFreshCommand;
+use Albaraa\Aztec\Console\SeedFreshCommand;
+use Albaraa\Aztec\Console\SetModuleOrderCommand;
 use Albaraa\Aztec\Support\ModuleLoader;
 
 class AztecServiceProvider extends ServiceProvider
@@ -31,6 +39,14 @@ class AztecServiceProvider extends ServiceProvider
                 MakeModelCommand::class,
                 MakeRequestCommand::class,
                 MakeResourceCommand::class,
+                MakeMigrationCommand::class,
+                MakeSeederCommand::class,
+                MigrateModuleCommand::class,
+                SeedModuleCommand::class,
+                MigrateRollbackCommand::class,
+                MigrateFreshCommand::class,
+                SeedFreshCommand::class,
+                SetModuleOrderCommand::class,
             ]);
 
             $sourceConfig = realpath(dirname(__DIR__) . '/config/aztec.php') ?: dirname(__DIR__) . '/config/aztec.php';
