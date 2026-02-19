@@ -1,6 +1,7 @@
 # Aztec - Advanced Layered CRUD Generator for Laravel
 
 ## Introduction
+
 Aztec is a powerful Laravel package designed to automate the generation of a clean, layered architecture for your application modules. It goes beyond simple CRUD generation by implementing a robust Service-Repository pattern, ensuring your controllers remain thin and your business logic is well-encapsulated.
 
 ## Installation
@@ -42,15 +43,15 @@ When you run the command, Aztec performs the following steps:
 
 1.  **Analysis**: It inspects your Model file to understand its fillable attributes, casts, and relationships.
 2.  **Interactive Configuration**:
-    *   **Resources**: It asks which relationships should be included in the API Resource.
-    *   **Service Layer**: It prompts you to add custom filters for the listing endpoint (e.g., filter by status, type, etc.) and asks which relationships should be synced automatically during create/update operations.
+    - **Resources**: It asks which relationships should be included in the API Resource.
+    - **Service Layer**: It prompts you to add custom filters for the listing endpoint (e.g., filter by status, type, etc.) and asks which relationships should be synced automatically during create/update operations.
 3.  **File Generation**:
-    *   **Repository**: Generates `PostRepositoryInterface` and `EloquentPostRepository`. It checks `BlogServiceProvider` and binds the interface to the implementation automatically.
-    *   **Service**: Generates `PostService` containing business logic. It handles pagination, search (smartly guessing searchable fields), custom filtering, and transaction-wrapped CRUD operations.
-    *   **Requests**: Generates `PostStoreRequest` and `PostUpdateRequest` with rules inferred from your model. It also generates a `messages()` method returning code-based keys (e.g., `validations.blog.title.required`) for frontend localization.
-    *   **Controller**: Generates `PostController` which injects the `PostService`. It remains clean and acts only as a gateway.
-    *   **Resource**: Generates `PostResource` to format the JSON response.
-    *   **Routes**: Appends standard RESTful routes to `Modules/Blog/routes/web.php` with a clean group structure.
+    - **Repository**: Generates `PostRepositoryInterface` and `EloquentPostRepository`. It checks `BlogServiceProvider` and binds the interface to the implementation automatically.
+    - **Service**: Generates `PostService` containing business logic. It handles pagination, search (smartly guessing searchable fields), custom filtering, and transaction-wrapped CRUD operations.
+    - **Requests**: Generates `PostStoreRequest` and `PostUpdateRequest` with rules inferred from your model. It also generates a `messages()` method returning code-based keys (e.g., `validations.blog.title.required`) for frontend localization.
+    - **Controller**: Generates `PostController` which injects the `PostService`. It remains clean and acts only as a gateway.
+    - **Resource**: Generates `PostResource` to format the JSON response.
+    - **Routes**: Appends standard RESTful routes to `Modules/Blog/routes/web.php` with a clean group structure.
 
 ## Directory Structure Idea
 
@@ -89,4 +90,4 @@ php artisan vendor:publish --tag=aztec-config
 
 ---
 
-*Crafted for developers who value clean code and speed.*
+_Crafted for developers who value clean code and speed._
